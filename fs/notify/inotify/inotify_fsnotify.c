@@ -130,8 +130,11 @@ static int inotify_handle_event(struct fsnotify_group *group,
 			ret = PTR_ERR(added_event);
 	}
 
-	if (inode_mark->mask & IN_ONESHOT)
+	if (inode_mark->mask & IN_ONESHOT) {
+		fsnotify_get_mark(inode_mark);
 		fsnotify_destroy_mark(inode_mark);
+		fsnotify_put_mark(inode_mark);
+	}
 
 	return ret;
 }
